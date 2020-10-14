@@ -58,8 +58,10 @@ def save_mqtt_data(data, topic):
     if data == 'nan':
         log.error(f'inconsistent data from mqtt: topic - {topic}, data - {data}')
         return None
+
     room = topic.split('/')[0]
     type_sensor = topic.split('/')[2]
+
     influx_db.client.write_points(
         {
             "measurement": "climate",
