@@ -6,15 +6,6 @@ from utils import log
 from .mqtt_errors import MQTT_ERRORS
 
 
-# rooms = {
-#     'boiler_room': {'topic': 'boiler_room/sensors/ds18b20', 'model': None},
-#     'living_room': {'topic': 'boiler_room/sensors/dht22/#', 'model': Liveroom}
-# }
-
-# rooms = {
-#     'boiler_room': {'ds18b20': BoilerRoom, 'dht22': Liveroom},
-# }
-
 MQTT_USER = config('MQTT_USER', cast=str)
 MQTT_PASS = config('MQTT_PASS', cast=str)
 MQTT_HOST = config('MQTT_HOST', cast=str)
@@ -42,8 +33,8 @@ def on_disconnect(client, userdata, rc):
         log.info(f"stop extra connections...")
 
 
-def mqtt_start():
-    subscriber = client.Client(client_id='develop')  # TODO: change id for prod to CLIENT_ID var.
+def mqtt_run_service():
+    subscriber = client.Client(client_id=CLIENT_ID)  # TODO: change id for prod to CLIENT_ID var.
     subscriber.username_pw_set(MQTT_USER, password=MQTT_PASS)
     subscriber.on_connect = on_connect
     subscriber.on_message = on_message
@@ -62,15 +53,17 @@ def save_mqtt_data(data, topic):
     room = topic.split('/')[0]
     type_sensor = topic.split('/')[2]
 
-    influx_db.client.write_points(
-        {
-            "measurement": "climate",
-            "tags": {
-                "room": room,
-                "type_sensor": type_sensor
-            },
-            "fields": {
-                "value": round(float(data), 1)
+    influx_db.write_points(
+        [
+            {
+                "measurement": "climate",
+                "tags": {
+                    "room": room,
+                    "type_sensor": type_sensor
+                },
+                "fields": {
+                    "value": round(float(data), 1)
+                }
             }
-        }
+        ]
     )
