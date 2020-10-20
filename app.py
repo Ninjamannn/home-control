@@ -1,9 +1,16 @@
-from mqtt.mqtt_service import mqtt_run_service
+import falcon
+
+import handlers
+import middlewares
 
 
-def run_app():
-    mqtt_run_service()
+app = falcon.API(middleware=[
+    middlewares.TokenAuthMiddleware(),
+])
 
 
-if __name__ == '__main__':
-    run_app()
+# handlers
+app.add_route(
+    '/rooms/sensors',
+    handlers.SensorDataHandler(),
+)

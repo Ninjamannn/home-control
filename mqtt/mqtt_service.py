@@ -53,13 +53,14 @@ def save_mqtt_data(data, topic):
     room = topic.split('/')[0]
     type_sensor = topic.split('/')[2]
 
-    influx_db.write_points(
+    influx_db.influx_db_client(
         [
             {
                 "measurement": "climate",
                 "tags": {
                     "room": room,
-                    "type_sensor": type_sensor
+                    "type_sensor": type_sensor,
+                    "type_value": ''
                 },
                 "fields": {
                     "value": round(float(data), 1)
