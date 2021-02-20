@@ -10,7 +10,7 @@ influx_db_client = InfluxDBClient(
 
 
 def save_sensors_data(sensors_data: dict):
-    for sensor in sensors_data:
+    for sensor in sensors_data['sensors_data']:
         influx_db_client.write_points(
             [
                 {
