@@ -38,7 +38,7 @@ def save_weather_data(weather_data: dict):
                         'measurement_type': measurement_type,
                     },
                     "fields": {
-                        "value": value
+                        "value": float(value)
                     }
                 }
             ]

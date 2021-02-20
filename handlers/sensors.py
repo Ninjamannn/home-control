@@ -46,12 +46,15 @@ class SensorDataHandler:
         except errors.ValidationError:
             resp.status = falcon.HTTP_400
             return
+        else:
+            self.logger.info(f'sensors_data: {sensors_data}')
 
         influx_db.save_sensors_data(sensors_data=sensors_data)
 
         try:
             weather_data = get_weather_data()
+            self.logger.info(f'weather_data: {weather_data}')
             influx_db.save_weather_data(weather_data=weather_data)
-        except Exception as e:
-            self.logger.error(msg=f'while fetch weather data', exc_info=True)
+        except Exception:
+            self.logger.error(msg=f'error while fetch weather data', exc_info=True)
             pass
