@@ -27,4 +27,21 @@ def save_sensors_data(sensors_data: dict):
             ]
         )
 
+
+def save_weather_data(weather_data: dict):
+    for measurement_type, value in weather_data.items():
+        influx_db_client.write_points(
+            [
+                {
+                    "measurement": "weather",
+                    "tags": {
+                        'measurement_type': measurement_type,
+                    },
+                    "fields": {
+                        "value": value
+                    }
+                }
+            ]
+        )
+
 # influx_db.create_database('db0')

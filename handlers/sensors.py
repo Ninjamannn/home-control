@@ -5,6 +5,7 @@ import falcon
 
 import errors
 from database import influx_db
+from services.openweather.weather_service import get_weather_data
 
 
 class SensorDataHandler:
