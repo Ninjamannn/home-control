@@ -48,3 +48,10 @@ class SensorDataHandler:
             return
 
         influx_db.save_sensors_data(sensors_data=sensors_data)
+
+        try:
+            weather_data = get_weather_data()
+            influx_db.save_weather_data(weather_data=weather_data)
+        except Exception as e:
+            self.logger.error(msg=f'while fetch weather data', exc_info=True)
+            pass
